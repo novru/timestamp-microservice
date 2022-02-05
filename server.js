@@ -1,3 +1,4 @@
+const timestamp = require("./routes/timestamp-router")
 // server.js
 // where your node app starts
 
@@ -24,9 +25,10 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+app.use("/api",timestamp)
 
 
 // listen for requests :)
-var listener = app.listen(process.env.PORT, function () {
+var listener = app.listen(5000, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
