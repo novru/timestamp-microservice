@@ -1,23 +1,25 @@
 const timestamp = (req, res) => {
 	const { date } = req.params;
 
-	if (!isNaN(Date.parse(date))) {
-		const unix_parsed = Math.floor(new Date(date).getTime() / 1000);
-		const utc_parsed = new Date(date).toUTCString();
+	let resDate;
 
-		return res.status(200).json({ unix: unix_parsed, utc: utc_parsed });
-	} else if (!isNaN(date)) {
-		const unix_parsed = Math.floor(new Date(Number(date)).getTime() / 1000);
-		const utc_parsed = new Date(Number(date)).toUTCString();
-
-		return res.status(200).json({ unix: unix_parsed, utc: utc_parsed });
+	//checking if the user send date as params, if not a new date is created
+	if (!date) {
+		resDate = new Date();
 	} else {
+
+        //check if the value is a string number (e.g: '1451001600000') if yes, we parse the string into a number
+        resDate = isNaN(Date.parse(date)) ? Number(date) : date
+
+	}
+
+	//if date is invalid, error msg is returned
+	if (new Date(resDate) == "Invalid Date") {
 		return res.json({ error: "Invalid Date" });
 	}
-};
 
-const isValidDate = (d) => {
-	return d instanceof Date && !isNaN(d);
+	res.json({ unix: new Date(resDate).getTime(), utc: new Date(resDate).toUTCString() });
+
 };
 
 module.exports = {
